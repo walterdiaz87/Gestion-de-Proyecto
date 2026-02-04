@@ -2,15 +2,23 @@
 
 export const dynamic = 'force-dynamic';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { getSupabaseBrowserClient } from '@/lib/supabase';
+import { getSupabaseBrowserClient, isSupabaseConfigured } from '@/lib/supabase';
+import { AlertTriangle } from 'lucide-react';
 
 export default function LoginPage() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
+    const [configError, setConfigError] = useState(false);
     const router = useRouter();
+
+    useEffect(() => {
+        if (!isSupabaseConfigured()) {
+            setConfigError(true);
+        }
+    }, []);
 
     // Initialize client (env vars must be set)
     const supabase = getSupabaseBrowserClient();
@@ -26,7 +34,11 @@ export default function LoginPage() {
         });
 
         if (error) {
-            alert('Error: ' + error.message);
+            if (error.message === 'Failed to fetch') {
+                alert('Error de Conexión: No se pudo contactar a Supabase. Verifica que las claves de Vercel estén bien configuradas.');
+            } else {
+                alert('Error: ' + error.message);
+            }
             setLoading(false);
         } else {
             router.push('/dashboard');
@@ -41,6 +53,16 @@ export default function LoginPage() {
                     <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Bienvenido</h1>
                     <p className="text-slate-500 mt-2">Ingresa a GestiónObra</p>
                 </div>
+
+                {configError && (
+                    <div className="mb-6 p-4 bg-amber-50 border border-amber-200 rounded-xl flex gap-3 text-amber-800 text-sm">
+                        <AlertTriangle className="shrink-0" size={20} />
+                        <div>
+                            <p className="font-bold mb-1">¡Faltan claves de configuración!</p>
+                            <p>Debes añadir `NEXT_PUBLIC_SUPABASE_URL` y `NEXT_PUBLIC_SUPABASE_ANON_KEY` en el panel de Vercel.</p>
+                        </div>
+                    </div>
+                )}
 
                 <form onSubmit={handleLogin} className="space-y-5">
                     <div>
