@@ -1,5 +1,7 @@
 'use client';
 
+export const dynamic = 'force-dynamic';
+
 import { useState, useEffect } from 'react';
 import { LayoutGrid, BarChart3, Plus, X } from 'lucide-react';
 import { createBrowserClient } from '@supabase/ssr';
@@ -23,8 +25,8 @@ export default function ProjectOverviewPage() {
     const [loading, setLoading] = useState(true);
 
     const supabase = createBrowserClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+        process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co',
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder'
     );
 
     useEffect(() => {
@@ -55,8 +57,8 @@ export default function ProjectOverviewPage() {
                         <button
                             onClick={() => setViewMode('gantt')}
                             className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all ${viewMode === 'gantt'
-                                    ? 'bg-slate-900 text-white shadow-sm'
-                                    : 'text-slate-600 hover:text-slate-900'
+                                ? 'bg-slate-900 text-white shadow-sm'
+                                : 'text-slate-600 hover:text-slate-900'
                                 }`}
                         >
                             <BarChart3 size={18} />
@@ -65,8 +67,8 @@ export default function ProjectOverviewPage() {
                         <button
                             onClick={() => setViewMode('kanban')}
                             className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all ${viewMode === 'kanban'
-                                    ? 'bg-slate-900 text-white shadow-sm'
-                                    : 'text-slate-600 hover:text-slate-900'
+                                ? 'bg-slate-900 text-white shadow-sm'
+                                : 'text-slate-600 hover:text-slate-900'
                                 }`}
                         >
                             <LayoutGrid size={18} />

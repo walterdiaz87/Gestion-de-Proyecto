@@ -1,5 +1,7 @@
 'use client';
 
+export const dynamic = 'force-dynamic';
+
 import Link from 'next/link';
 import { Home, BarChart2, ShoppingCart, Clock, Settings, LogOut, Menu, User } from 'lucide-react';
 import { useEffect, useState } from 'react';
@@ -15,8 +17,8 @@ export default function DashboardLayout({
     const router = useRouter();
 
     const supabase = createBrowserClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+        process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co',
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder'
     );
 
     useEffect(() => {

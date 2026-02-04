@@ -1,5 +1,7 @@
 'use client';
 
+export const dynamic = 'force-dynamic';
+
 import { useState, useEffect } from 'react';
 import { Plus, ChevronRight, ChevronDown, Calendar, X, Edit2, Trash2, CheckCircle, AlertTriangle, FileText } from 'lucide-react';
 import { createBrowserClient } from '@supabase/ssr';
@@ -35,8 +37,8 @@ export default function GanttPage() {
     const [notesTask, setNotesTask] = useState<Task | null>(null);
 
     const supabase = createBrowserClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+        process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co',
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder'
     );
 
     useEffect(() => {

@@ -1,5 +1,7 @@
 'use client';
 
+export const dynamic = 'force-dynamic';
+
 import { useState, useEffect } from 'react';
 import { Users, UserPlus, Building2, Plus, Edit, Trash2 } from 'lucide-react';
 import { createBrowserClient } from '@supabase/ssr';
@@ -26,8 +28,8 @@ export default function AdminPage() {
     const [loading, setLoading] = useState(true);
 
     const supabase = createBrowserClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+        process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co',
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder'
     );
 
     useEffect(() => {
@@ -70,8 +72,8 @@ export default function AdminPage() {
                 <button
                     onClick={() => setActiveTab('users')}
                     className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all ${activeTab === 'users'
-                            ? 'bg-slate-900 text-white'
-                            : 'text-slate-600 hover:text-slate-900'
+                        ? 'bg-slate-900 text-white'
+                        : 'text-slate-600 hover:text-slate-900'
                         }`}
                 >
                     <Users size={18} />
@@ -80,8 +82,8 @@ export default function AdminPage() {
                 <button
                     onClick={() => setActiveTab('suppliers')}
                     className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all ${activeTab === 'suppliers'
-                            ? 'bg-slate-900 text-white'
-                            : 'text-slate-600 hover:text-slate-900'
+                        ? 'bg-slate-900 text-white'
+                        : 'text-slate-600 hover:text-slate-900'
                         }`}
                 >
                     <Building2 size={18} />
