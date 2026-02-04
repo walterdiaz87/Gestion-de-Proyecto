@@ -4,7 +4,7 @@ export const dynamic = 'force-dynamic';
 
 import { useState, useEffect } from 'react';
 import { Plus, ChevronRight, ChevronDown, Calendar, X, Edit2, Trash2, CheckCircle, AlertTriangle, FileText } from 'lucide-react';
-import { createBrowserClient } from '@supabase/ssr';
+import { getSupabaseBrowserClient } from '@/lib/supabase';
 
 type Task = {
     id: string;
@@ -36,10 +36,7 @@ export default function GanttPage() {
     const [showNotesModal, setShowNotesModal] = useState(false);
     const [notesTask, setNotesTask] = useState<Task | null>(null);
 
-    const supabase = createBrowserClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co',
-        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder'
-    );
+    const supabase = getSupabaseBrowserClient();
 
     useEffect(() => {
         loadTasks();
@@ -526,10 +523,7 @@ function TaskModal({ task, parentTaskId, onClose }: {
     });
     const [profiles, setProfiles] = useState<any[]>([]);
 
-    const supabase = createBrowserClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-    );
+    const supabase = getSupabaseBrowserClient();
 
     useEffect(() => {
         async function loadProfiles() {
@@ -672,10 +666,7 @@ function TaskModal({ task, parentTaskId, onClose }: {
 function NotesModal({ task, onClose }: { task: Task; onClose: () => void }) {
     const [notes, setNotes] = useState(task.notes || '');
 
-    const supabase = createBrowserClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-    );
+    const supabase = getSupabaseBrowserClient();
 
     async function handleSave() {
         await supabase.from('tasks').update({ notes: notes || null }).eq('id', task.id);

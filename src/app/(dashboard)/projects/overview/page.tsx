@@ -4,7 +4,7 @@ export const dynamic = 'force-dynamic';
 
 import { useState, useEffect } from 'react';
 import { LayoutGrid, BarChart3, Plus, X } from 'lucide-react';
-import { createBrowserClient } from '@supabase/ssr';
+import { getSupabaseBrowserClient } from '@/lib/supabase';
 
 type ViewMode = 'gantt' | 'kanban';
 
@@ -24,10 +24,7 @@ export default function ProjectOverviewPage() {
     const [showTaskModal, setShowTaskModal] = useState(false);
     const [loading, setLoading] = useState(true);
 
-    const supabase = createBrowserClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co',
-        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder'
-    );
+    const supabase = getSupabaseBrowserClient();
 
     useEffect(() => {
         loadTasks();
@@ -247,10 +244,7 @@ function TaskModal({ onClose }: { onClose: () => void }) {
     });
     const [profiles, setProfiles] = useState<any[]>([]);
 
-    const supabase = createBrowserClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-    );
+    const supabase = getSupabaseBrowserClient();
 
     useEffect(() => {
         async function loadProfiles() {

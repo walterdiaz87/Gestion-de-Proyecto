@@ -4,7 +4,7 @@ export const dynamic = 'force-dynamic';
 
 import { useState, useEffect } from 'react';
 import { Users, UserPlus, Building2, Plus, Edit, Trash2 } from 'lucide-react';
-import { createBrowserClient } from '@supabase/ssr';
+import { getSupabaseBrowserClient } from '@/lib/supabase';
 
 type Profile = {
     id: string;
@@ -27,10 +27,7 @@ export default function AdminPage() {
     const [suppliers, setSuppliers] = useState<Supplier[]>([]);
     const [loading, setLoading] = useState(true);
 
-    const supabase = createBrowserClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co',
-        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder'
-    );
+    const supabase = getSupabaseBrowserClient();
 
     useEffect(() => {
         loadData();
@@ -247,10 +244,7 @@ function SupplierForm({ onClose }: { onClose: () => void }) {
         address: '',
     });
 
-    const supabase = createBrowserClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-    );
+    const supabase = getSupabaseBrowserClient();
 
     async function handleSubmit(e: React.FormEvent) {
         e.preventDefault();

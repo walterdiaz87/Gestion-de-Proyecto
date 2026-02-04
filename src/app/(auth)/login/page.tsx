@@ -1,8 +1,10 @@
 'use client';
 
+export const dynamic = 'force-dynamic';
+
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { createBrowserClient } from '@supabase/ssr';
+import { getSupabaseBrowserClient } from '@/lib/supabase';
 
 export default function LoginPage() {
     const [email, setEmail] = useState('');
@@ -11,10 +13,7 @@ export default function LoginPage() {
     const router = useRouter();
 
     // Initialize client (env vars must be set)
-    const supabase = createBrowserClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-    );
+    const supabase = getSupabaseBrowserClient();
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();

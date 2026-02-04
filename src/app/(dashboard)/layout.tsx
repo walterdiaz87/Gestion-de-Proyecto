@@ -5,7 +5,7 @@ export const dynamic = 'force-dynamic';
 import Link from 'next/link';
 import { Home, BarChart2, ShoppingCart, Clock, Settings, LogOut, Menu, User } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { createBrowserClient } from '@supabase/ssr';
+import { getSupabaseBrowserClient } from '@/lib/supabase';
 import { useRouter } from 'next/navigation';
 
 export default function DashboardLayout({
@@ -16,10 +16,7 @@ export default function DashboardLayout({
     const [user, setUser] = useState<{ email: string; full_name: string; role: string } | null>(null);
     const router = useRouter();
 
-    const supabase = createBrowserClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co',
-        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder'
-    );
+    const supabase = getSupabaseBrowserClient();
 
     useEffect(() => {
         async function loadUser() {
