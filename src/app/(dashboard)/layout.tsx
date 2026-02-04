@@ -14,6 +14,7 @@ export default function DashboardLayout({
     children: React.ReactNode;
 }) {
     const [user, setUser] = useState<{ email: string; full_name: string; role: string } | null>(null);
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const router = useRouter();
 
     const supabase = getSupabaseBrowserClient();
@@ -42,22 +43,28 @@ export default function DashboardLayout({
     }
 
     return (
-        <div className="flex min-h-screen bg-slate-50">
-            {/* Mobile Sidebar Overlay (TODO: Add functionality) */}
+        <div className="flex min-h-screen bg-slate-50 relative">
+            {/* Mobile Sidebar Overlay */}
+            {isSidebarOpen && (
+                <div
+                    className="fixed inset-0 bg-slate-900/50 z-20 md:hidden backdrop-blur-sm"
+                    onClick={() => setIsSidebarOpen(false)}
+                ></div>
+            )}
 
-            {/* Desktop Sidebar */}
-            <aside className="hidden md:flex flex-col w-64 bg-slate-900 text-white shadow-xl fixed h-full z-10">
+            {/* Desktop & Mobile Sidebar */}
+            <aside className={`fixed inset-y-0 left-0 bg-slate-900 text-white shadow-xl h-full z-30 transform transition-transform duration-300 ease-in-out md:translate-x-0 md:static md:flex md:flex-col w-64 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
                 <div className="p-6 border-b border-slate-800 flex items-center gap-3">
                     <div className="w-8 h-8 bg-blue-500 rounded-lg flex-shrink-0"></div>
                     <span className="font-bold text-lg tracking-tight">GestiónObra</span>
                 </div>
 
-                <nav className="flex-1 p-4 space-y-2">
-                    <NavLink href="/dashboard" icon={<Home size={20} />} label="Inicio" />
-                    <NavLink href="/projects/gantt" icon={<BarChart2 size={20} />} label="Gantt" />
-                    <NavLink href="/purchasing" icon={<ShoppingCart size={20} />} label="Compras" />
-                    <NavLink href="/timesheet" icon={<Clock size={20} />} label="Horas" />
-                    <NavLink href="/admin" icon={<Settings size={20} />} label="Administración" />
+                <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
+                    <NavLink href="/dashboard" icon={<Home size={20} />} label="Inicio" onClick={() => setIsSidebarOpen(false)} />
+                    <NavLink href="/projects/gantt" icon={<BarChart2 size={20} />} label="Gantt" onClick={() => setIsSidebarOpen(false)} />
+                    <NavLink href="/purchasing" icon={<ShoppingCart size={20} />} label="Compras" onClick={() => setIsSidebarOpen(false)} />
+                    <NavLink href="/timesheet" icon={<Clock size={20} />} label="Horas" onClick={() => setIsSidebarOpen(false)} />
+                    <NavLink href="/admin" icon={<Settings size={20} />} label="Administración" onClick={() => setIsSidebarOpen(false)} />
                 </nav>
 
                 {/* User Profile Section */}
@@ -98,7 +105,10 @@ export default function DashboardLayout({
                         <div className="w-8 h-8 bg-blue-600 rounded-lg"></div>
                         GestiónObra
                     </div>
-                    <button className="p-2 bg-white rounded-md shadow-sm border">
+                    <button
+                        onClick={() => setIsSidebarOpen(true)}
+                        className="p-2 bg-white rounded-md shadow-sm border hover:bg-slate-50 transition-colors"
+                    >
                         <Menu size={24} />
                     </button>
                 </header>
@@ -109,10 +119,14 @@ export default function DashboardLayout({
     );
 }
 
-function NavLink({ href, icon, label }: { href: string; icon: React.ReactNode; label: string }) {
+function NavLink({ href, icon, label, onClick }: { href: string; icon: React.ReactNode; label: string; onClick?: () => void }) {
     // Simple active state check would be done via usePathname hook
     return (
-        <Link href={href} className="flex items-center gap-3 px-4 py-3 text-slate-300 hover:text-white hover:bg-slate-800 rounded-lg transition-colors group">
+        <Link
+            href={href}
+            onClick={onClick}
+            className="flex items-center gap-3 px-4 py-3 text-slate-300 hover:text-white hover:bg-slate-800 rounded-lg transition-colors group"
+        >
             <span className="group-hover:text-blue-400 transition-colors">{icon}</span>
             <span className="font-medium">{label}</span>
         </Link>
