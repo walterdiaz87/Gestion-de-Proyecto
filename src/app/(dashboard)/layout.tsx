@@ -30,7 +30,7 @@ export default function DashboardLayout({
                     .single();
 
                 if (profile) {
-                    setUser(profile);
+                    setUser(profile as { email: string; full_name: string; role: string });
                 }
             }
         }
@@ -72,8 +72,8 @@ export default function DashboardLayout({
                             <div className="text-xs text-slate-400">{user.email}</div>
                             <div className="mt-1">
                                 <span className={`text-xs px-2 py-0.5 rounded-full ${user.role === 'supervisor' ? 'bg-purple-900 text-purple-200' :
-                                        user.role === 'responsable' ? 'bg-blue-900 text-blue-200' :
-                                            'bg-green-900 text-green-200'
+                                    user.role === 'responsable' ? 'bg-blue-900 text-blue-200' :
+                                        'bg-green-900 text-green-200'
                                     }`}>
                                     {user.role === 'supervisor' ? 'Supervisor' :
                                         user.role === 'responsable' ? 'Responsable' : 'Operario'}
