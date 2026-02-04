@@ -11,13 +11,14 @@ export default function LoginPage() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
-    const [configError, setConfigError] = useState(false);
+    const [missingKeys, setMissingKeys] = useState<string[]>([]);
     const router = useRouter();
 
     useEffect(() => {
-        if (!isSupabaseConfigured()) {
-            setConfigError(true);
-        }
+        const missing = [];
+        if (!process.env.NEXT_PUBLIC_SUPABASE_URL) missing.push('NEXT_PUBLIC_SUPABASE_URL');
+        if (!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) missing.push('NEXT_PUBLIC_SUPABASE_ANON_KEY');
+        setMissingKeys(missing);
     }, []);
 
     // Initialize client (env vars must be set)
@@ -54,12 +55,16 @@ export default function LoginPage() {
                     <p className="text-slate-500 mt-2">Ingresa a GestiónObra</p>
                 </div>
 
-                {configError && (
+                {missingKeys.length > 0 && (
                     <div className="mb-6 p-4 bg-amber-50 border border-amber-200 rounded-xl flex gap-3 text-amber-800 text-sm">
                         <AlertTriangle className="shrink-0" size={20} />
                         <div>
-                            <p className="font-bold mb-1">¡Faltan claves de configuración!</p>
-                            <p>Debes añadir `NEXT_PUBLIC_SUPABASE_URL` y `NEXT_PUBLIC_SUPABASE_ANON_KEY` en el panel de Vercel.</p>
+                            <p className="font-bold mb-1">¡Configuración Incompleta!</p>
+                            <p>No se detectan las siguientes claves en Vercel:</p>
+                            <ul className="list-disc ml-4 mt-1 font-mono text-xs">
+                                {missingKeys.map(key => <li key={key}>{key}</li>)}
+                            </ul>
+                            <p className="mt-2 text-xs">Asegúrate de haberlas guardado en <b>Settings &rarr; Environment Variables</b> y de haber hecho un <b>Redeploy</b>.</p>
                         </div>
                     </div>
                 )}
