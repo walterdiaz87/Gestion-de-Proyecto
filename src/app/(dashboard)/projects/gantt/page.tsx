@@ -287,15 +287,15 @@ function MSProjectLayout({ tasks, flatTasks, expanded, hoveredTaskId, timeRange,
     }
 
     return (
-        <div className="bg-white rounded-2xl border border-slate-200 shadow-lg overflow-hidden">
-            <div className="flex">
+        <div className="bg-white rounded-2xl border border-slate-200 shadow-lg overflow-hidden flex flex-col h-[calc(100dvh-12rem)] md:h-[650px]">
+            <div className="flex flex-1 overflow-hidden">
                 {/* LEFT: Task List */}
-                <div className="w-[550px] border-r border-slate-200 bg-slate-50">
-                    <div className="bg-slate-800 text-white px-4 py-3 font-bold text-sm">
-                        LISTA DE TAREAS
+                <div className="w-36 md:w-[550px] border-r border-slate-200 bg-slate-50 flex flex-col z-10">
+                    <div className="bg-slate-800 text-white px-3 md:px-4 py-3 font-bold text-[10px] md:text-sm uppercase tracking-wider">
+                        TAREA / RECURSO
                     </div>
 
-                    <div className="overflow-y-auto max-h-[600px]">
+                    <div className="overflow-y-auto flex-1 custom-scrollbar">
                         {flatTasks.map((task, index) => {
                             const level = getTaskLevel(task);
                             const hasChildren = task.children && task.children.length > 0;
@@ -338,7 +338,7 @@ function MSProjectLayout({ tasks, flatTasks, expanded, hoveredTaskId, timeRange,
                                             )}
 
                                             <span
-                                                className={`text-sm font-semibold truncate ${isCompleted ? 'line-through' : ''}`}
+                                                className={`text-[11px] md:text-sm font-semibold truncate ${isCompleted ? 'line-through' : ''}`}
                                                 style={{ color: isCompleted ? '#94a3b8' : color }}
                                                 title={task.name}
                                             >
@@ -346,7 +346,7 @@ function MSProjectLayout({ tasks, flatTasks, expanded, hoveredTaskId, timeRange,
                                             </span>
                                         </div>
 
-                                        <div className="flex items-center gap-1 flex-shrink-0">
+                                        <div className="hidden md:flex items-center gap-1 flex-shrink-0">
                                             {task.notes && (
                                                 <button
                                                     onClick={(e) => { e.stopPropagation(); onNotes(task); }}
@@ -389,18 +389,11 @@ function MSProjectLayout({ tasks, flatTasks, expanded, hoveredTaskId, timeRange,
                                         </div>
                                     </div>
 
-                                    <div className="text-xs text-slate-500 mt-1 ml-4">
+                                    <div className="hidden md:block text-xs text-slate-500 mt-1 ml-4 whitespace-nowrap">
                                         {task.responsable?.full_name || 'Sin asignar'} • {new Date(task.start_date).toLocaleDateString('es-AR')} - {new Date(task.end_date).toLocaleDateString('es-AR')}
-                                        {isCompleted && task.completed_at && (
-                                            <span className="ml-2 text-green-600 font-medium">
-                                                ✓ Completada {new Date(task.completed_at).toLocaleDateString('es-AR')}
-                                            </span>
-                                        )}
-                                        {isOverdue && (
-                                            <span className="ml-2 text-red-600 font-medium">
-                                                ⚠ Excedida
-                                            </span>
-                                        )}
+                                    </div>
+                                    <div className="md:hidden text-[9px] text-slate-400 mt-0.5 ml-4 truncate">
+                                        {task.responsable?.full_name || 'Libre'}
                                     </div>
                                 </div>
                             );
@@ -409,8 +402,8 @@ function MSProjectLayout({ tasks, flatTasks, expanded, hoveredTaskId, timeRange,
                 </div>
 
                 {/* RIGHT: Timeline */}
-                <div className="flex-1 bg-slate-800 overflow-x-auto">
-                    <div className={timeRange === 'month' ? 'min-w-[700px]' : 'min-w-[1800px]'}>
+                <div className="flex-1 bg-slate-800 overflow-x-auto custom-scrollbar scroll-smooth snap-x">
+                    <div className={timeRange === 'month' ? 'min-w-[500px] md:min-w-[700px]' : 'min-w-[1200px] md:min-w-[1800px]'}>
                         {/* Headers */}
                         <div
                             className={`grid gap-px px-4 py-3`}
@@ -423,8 +416,8 @@ function MSProjectLayout({ tasks, flatTasks, expanded, hoveredTaskId, timeRange,
                             ))}
                         </div>
 
-                        {/* Task Bars */}
-                        <div className="px-4 pb-4 space-y-2 max-h-[560px] overflow-y-auto">
+                        {/* Task Bars container */}
+                        <div className="px-1 md:px-4 pb-4 space-y-2 overflow-y-auto flex-1 custom-scrollbar">
                             {flatTasks.map((task, index) => {
                                 const pos = getTaskPosition(task.start_date, task.end_date);
                                 const color = colors[index % colors.length];
@@ -560,8 +553,9 @@ function TaskModal({ task, parentTaskId, onClose }: {
     }
 
     return (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 max-h-[90vh] overflow-y-auto">
+        <div className="fixed inset-0 bg-slate-900/60 flex items-end md:items-center justify-center z-[100] p-0 md:p-4 backdrop-blur-sm transition-all duration-300">
+            <div className="bg-white rounded-t-[2.5rem] md:rounded-3xl shadow-2xl w-full md:max-w-md p-8 md:p-10 animate-in slide-in-from-bottom duration-300 max-h-[92vh] flex flex-col">
+                <div className="w-12 h-1.5 bg-slate-200 rounded-full mx-auto mb-6 md:hidden"></div>
                 <div className="flex items-center justify-between mb-6">
                     <h2 className="text-xl font-bold">
                         {task ? 'Editar Tarea' : (parentTaskId ? 'Nueva Subtarea' : 'Nueva Tarea')}
@@ -606,11 +600,11 @@ function TaskModal({ task, parentTaskId, onClose }: {
                                 required
                                 value={formData.start_date}
                                 onChange={(e) => setFormData({ ...formData, start_date: e.target.value })}
-                                className="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"
+                                className="w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-blue-500 outline-none text-base"
                             />
                         </div>
                         <div>
-                            <label className="block text-sm font-medium mb-1.5 flex items-center gap-2">
+                            <label className="block text-sm font-semibold text-slate-700 mb-1.5 flex items-center gap-2">
                                 <Calendar size={16} className="text-blue-500" />
                                 Fin *
                             </label>
@@ -619,42 +613,42 @@ function TaskModal({ task, parentTaskId, onClose }: {
                                 required
                                 value={formData.end_date}
                                 onChange={(e) => setFormData({ ...formData, end_date: e.target.value })}
-                                className="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"
+                                className="w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-blue-500 outline-none text-base"
                             />
                         </div>
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium mb-1.5 flex items-center gap-2">
+                        <label className="block text-sm font-semibold text-slate-700 mb-1.5 flex items-center gap-2">
                             <FileText size={16} className="text-purple-500" />
                             Notas / Anotaciones
                         </label>
                         <textarea
                             value={formData.notes}
                             onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
-                            className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                            className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-blue-500 outline-none resize-none text-base"
                             rows={3}
                             placeholder="Agregar notas sobre esta tarea..."
                         />
                     </div>
 
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-3 p-3 bg-slate-50 rounded-2xl border border-slate-100">
                         <input
                             type="checkbox"
                             id="milestone"
                             checked={formData.is_milestone}
                             onChange={(e) => setFormData({ ...formData, is_milestone: e.target.checked })}
-                            className="w-4 h-4"
+                            className="w-5 h-5 rounded-lg border-slate-300 text-blue-600 focus:ring-blue-500"
                         />
-                        <label htmlFor="milestone" className="text-sm font-medium">Es un hito</label>
+                        <label htmlFor="milestone" className="text-sm font-bold text-slate-700 cursor-pointer">Es un hito importante</label>
                     </div>
 
-                    <div className="flex justify-end gap-2 pt-4">
-                        <button type="button" onClick={onClose} className="px-4 py-2 bg-slate-200 text-slate-700 rounded-lg hover:bg-slate-300">
+                    <div className="flex gap-3 pt-6 pb-2 md:pb-0">
+                        <button type="button" onClick={onClose} className="flex-1 px-4 py-4 bg-slate-100 text-slate-600 rounded-2xl font-bold hover:bg-slate-200 transition-colors">
                             Cancelar
                         </button>
-                        <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
-                            {task ? 'Guardar' : 'Crear'}
+                        <button type="submit" className="flex-[2] px-4 py-4 bg-blue-600 text-white rounded-2xl font-bold hover:bg-blue-700 shadow-lg shadow-blue-600/30 transition-all active:scale-95">
+                            {task ? 'Guardar Cambios' : 'Crear Tarea'}
                         </button>
                     </div>
                 </form>
@@ -674,8 +668,9 @@ function NotesModal({ task, onClose }: { task: Task; onClose: () => void }) {
     }
 
     return (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-2xl shadow-2xl max-w-lg w-full p-6">
+        <div className="fixed inset-0 bg-slate-900/60 flex items-end md:items-center justify-center z-[100] p-0 md:p-4 backdrop-blur-sm transition-all duration-300">
+            <div className="bg-white rounded-t-[2.5rem] md:rounded-3xl shadow-2xl w-full md:max-w-lg p-8 md:p-10 animate-in slide-in-from-bottom duration-300 max-h-[92vh] flex flex-col">
+                <div className="w-12 h-1.5 bg-slate-200 rounded-full mx-auto mb-6 md:hidden"></div>
                 <div className="flex items-center justify-between mb-4">
                     <h2 className="text-xl font-bold flex items-center gap-2">
                         <FileText size={20} className="text-purple-500" />

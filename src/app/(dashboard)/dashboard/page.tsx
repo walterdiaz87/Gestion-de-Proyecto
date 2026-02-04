@@ -53,13 +53,13 @@ export default function DashboardPage() {
     };
 
     return (
-        <div className="max-w-7xl mx-auto">
-            <div className="mb-8">
-                <h1 className="text-2xl font-bold text-slate-900">Panel de Control</h1>
-                <p className="text-slate-500">Resumen general del proyecto</p>
+        <div className="w-full space-y-8">
+            <div className="flex flex-col gap-1">
+                <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Panel de Control</h1>
+                <p className="text-slate-500 font-medium tracking-wide">Estado actual de la obra industrial</p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
                 <StatCard
                     title="Avance Global"
                     value={`${mockStats.progress}%`}
@@ -112,8 +112,8 @@ function ProjectStage({ name, progress, status }: { name: string, progress: numb
             <div className="flex justify-between items-center mb-2">
                 <span className="font-medium text-slate-700">{name}</span>
                 <span className={`text-xs font-bold px-2 py-1 rounded-full ${status === 'blocked' ? 'bg-red-100 text-red-600' :
-                        status === 'completed' ? 'bg-green-100 text-green-600' :
-                            status === 'in_progress' ? 'bg-blue-100 text-blue-600' : 'bg-slate-100 text-slate-500'
+                    status === 'completed' ? 'bg-green-100 text-green-600' :
+                        status === 'in_progress' ? 'bg-blue-100 text-blue-600' : 'bg-slate-100 text-slate-500'
                     }`}>
                     {status === 'blocked' ? 'BLOQUEADO' :
                         status === 'completed' ? 'COMPLETO' :

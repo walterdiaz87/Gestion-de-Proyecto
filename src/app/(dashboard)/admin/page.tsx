@@ -58,10 +58,10 @@ export default function AdminPage() {
     }
 
     return (
-        <div className="max-w-7xl mx-auto">
-            <div className="mb-8">
-                <h1 className="text-2xl font-bold text-slate-900">Administración</h1>
-                <p className="text-slate-500">Gestión de usuarios y proveedores</p>
+        <div className="w-full space-y-8">
+            <div className="flex flex-col gap-1">
+                <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Administración</h1>
+                <p className="text-slate-500 font-medium">Control Central de Usuarios y Proveedores</p>
             </div>
 
             {/* Tabs */}
@@ -104,12 +104,12 @@ function UsersPanel({ profiles, onUpdate, loading }: { profiles: Profile[], onUp
     return (
         <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
             <table className="w-full">
-                <thead className="bg-slate-50 border-b border-slate-100">
+                <thead className="bg-slate-50 border-b border-slate-200">
                     <tr>
-                        <th className="px-6 py-4 text-left font-semibold text-slate-700 text-sm">Nombre</th>
-                        <th className="px-6 py-4 text-left font-semibold text-slate-700 text-sm">Email</th>
-                        <th className="px-6 py-4 text-left font-semibold text-slate-700 text-sm">Rol</th>
-                        <th className="px-6 py-4 text-right font-semibold text-slate-700 text-sm">Acciones</th>
+                        <th className="px-6 py-4 text-left font-bold text-slate-900 text-xs uppercase tracking-wider">Nombre & Identidad</th>
+                        <th className="px-6 py-4 text-left font-bold text-slate-900 text-xs uppercase tracking-wider hidden sm:table-cell">Email</th>
+                        <th className="px-6 py-4 text-left font-bold text-slate-900 text-xs uppercase tracking-wider">Rol Sistema</th>
+                        <th className="px-6 py-4 text-right font-bold text-slate-900 text-xs uppercase tracking-wider">Acciones</th>
                     </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-50">
@@ -118,21 +118,24 @@ function UsersPanel({ profiles, onUpdate, loading }: { profiles: Profile[], onUp
                     ) : (
                         profiles.map((profile) => (
                             <tr key={profile.id} className="hover:bg-slate-50 transition-colors">
-                                <td className="px-6 py-4">
+                                <td className="px-6 py-5">
                                     {editingId === profile.id ? (
                                         <input
                                             type="text"
                                             value={editName}
                                             onChange={(e) => setEditName(e.target.value)}
-                                            className="px-3 py-1 border border-slate-300 rounded-lg text-sm"
+                                            className="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-xl text-sm outline-none focus:ring-2 focus:ring-blue-500"
                                             autoFocus
                                         />
                                     ) : (
-                                        <span className="font-semibold text-slate-900">{profile.full_name}</span>
+                                        <div className="flex flex-col">
+                                            <span className="font-bold text-slate-900">{profile.full_name}</span>
+                                            <span className="text-[10px] text-slate-400 sm:hidden">{profile.email}</span>
+                                        </div>
                                     )}
                                 </td>
-                                <td className="px-6 py-4 text-slate-600">{profile.email}</td>
-                                <td className="px-6 py-4">
+                                <td className="px-6 py-5 text-slate-600 font-medium hidden sm:table-cell">{profile.email}</td>
+                                <td className="px-6 py-5">
                                     <RoleBadge role={profile.role} />
                                 </td>
                                 <td className="px-6 py-4 text-right">

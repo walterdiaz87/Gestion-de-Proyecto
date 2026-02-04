@@ -41,8 +41,8 @@ export default function ProjectOverviewPage() {
     }
 
     return (
-        <div className="max-w-7xl mx-auto">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+        <div className="w-full space-y-8">
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-6 border-b border-slate-200">
                 <div>
                     <h1 className="text-2xl font-bold text-slate-900">Vista de Proyecto</h1>
                     <p className="text-slate-500">Gantt y Kanban de tareas</p>
@@ -213,9 +213,9 @@ function KanbanView({ tasks, loading }: { tasks: Task[], loading: boolean }) {
     }
 
     return (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="flex overflow-x-auto snap-x snap-mandatory gap-4 pb-4 -mx-4 px-4 md:mx-0 md:px-0 md:grid md:grid-cols-2 lg:grid-cols-4 custom-scrollbar">
             {columns.map((col) => (
-                <div key={col.id} className="bg-slate-50 rounded-2xl p-4 border border-slate-200">
+                <div key={col.id} className="min-w-[280px] sm:min-w-0 snap-center bg-slate-50 rounded-2xl p-4 border border-slate-200 flex flex-col h-full">
                     <div className="flex items-center justify-between mb-4">
                         <h3 className="font-bold text-slate-900">{col.title}</h3>
                         <span className="bg-white text-slate-600 text-xs font-bold px-2 py-1 rounded-full border border-slate-200">
